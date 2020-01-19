@@ -1,0 +1,45 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp6
+{
+    class Client
+    {
+        public virtual void Siparis()
+        {
+            Console.WriteLine("Gitar siparisi verilmistir");
+        }
+    }
+
+    class Servis
+    {
+        public void KemanSiparisi()
+        {
+            Console.WriteLine("Keman siaprisi verilmistir");
+        }
+    }
+
+    class Adaptör : Client
+    {
+        private Servis adaptee = new Servis();
+
+        public override void Siparis()
+        {
+            adaptee.KemanSiparisi();
+        }
+
+    }
+
+    class MainApp
+    {
+        static void Main()
+        {
+            Client c = new Adaptör();
+            c.Siparis();
+            Console.ReadKey();
+        }
+    }
+}
