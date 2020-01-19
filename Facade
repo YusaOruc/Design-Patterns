@@ -1,0 +1,99 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp6
+{
+    public class Müsteri
+    {
+        public int MüsteriNumarasi { get; set; }
+        public string Isim { get; set; }
+        public string IDNo { get; set; }
+        public decimal NakitMiktari { get; set; }
+    }
+
+
+    public static class Kontrol
+    {
+        public static bool BakiyeKontrol(Müsteri Müsteri, decimal miktar)
+        {
+            if (Müsteri.NakitMiktari >= miktar)
+                return true;
+            else
+                return false;
+        }
+
+        public static bool KrediKontrol(string IDNo)
+        {
+            return true;
+        }
+    }
+    public class EFT
+    {
+        public void EFTGönder(Müsteri gMüsteri, Müsteri aMüsteri, decimal eftmiktar)
+        {
+            if (Kontrol.BakiyeKontrol(gMüsteri, eftmiktar))
+            {
+                gMüsteri.NakitMiktari -= eftmiktar;
+                Console.WriteLine("EFT " + aMüsteri.MüsteriNumarasi + " nolu hesaba gönderildi..");
+            }
+            else
+                Console.WriteLine("Hesabinizda yeterli miktar olmadigi için EFT isleminiz gerçeklestirilemedi.");
+        }
+    }
+
+    public class Kredi
+    {
+        public void KrediKullan(Müsteri Müsteri)
+        {
+            if (Kontrol.KrediKontrol(Müsteri.IDNo))
+                Console.WriteLine("Kredi kullandirilmistir.");
+            else
+                Console.WriteLine("Banka kredinizi onaylamamistir.");
+        }
+    }
+
+    public class Facade
+    {
+        private EFT _EFT;
+        private Kredi _Kredi;
+
+        public Facade()
+        {
+            _EFT = new EFT();
+            _Kredi = new Kredi();
+        }
+
+        public void EFTGönder(Müsteri gMüsteri, Müsteri aMüsteri, decimal eftmiktar)
+        {
+            _EFT.EFTGönder(gMüsteri, aMüsteri, eftmiktar);
+        }
+
+        public void KrediKullan(Müsteri Müsteri)
+        {
+            _Kredi.KrediKullan(Müsteri);
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Facade facade = new Facade();
+
+            Müsteri Müsteri1 = new Müsteri() { IDNo = "1245203836", Isim = "Ahmet", MüsteriNumarasi = 11243, NakitMiktari = 3456090.25M };
+            Müsteri Müsteri2 = new Müsteri() { IDNo = "2342342342", Isim = "Mehmet", MüsteriNumarasi = 123123, NakitMiktari = 34929272.36M };
+
+            //send eft Müsteri1 to Müsteri2
+            facade.EFTGönder(Müsteri1, Müsteri2, 12345);
+
+            //use credit to Müsteri 2
+            facade.KrediKullan(Müsteri2);
+
+            Console.ReadLine();
+        }
+
+    }
+}
