@@ -1,0 +1,103 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Fabrika
+{
+    class Program
+    {
+        public interface IFabrika<Marka>
+            where Marka : IMarka
+        {
+            IAraba arabaOluştur();
+            IKamyon kamyonOluştur();
+        }
+
+        class Fabrika<Marka> : IFabrika<Marka>
+            where Marka : IMarka, new()
+        {
+            public IAraba arabaOluştur()
+            {
+                return new Araba<Marka>();
+            }
+
+            public IKamyon kamyonOluştur()
+            {
+                return new Kamyon<Marka>();
+            }
+        }
+        public interface IAraba
+        {
+            string TürAraba { get; }
+        }
+
+        public interface IKamyon
+        {
+            string TürKamyon { get; }
+        }
+
+        public class Araba<Marka> : IAraba
+            where Marka : IMarka, new()
+        {
+            private Marka marka;
+            public Araba()
+            {
+                marka = new Marka();
+            }
+
+            public string TürAraba { get { return marka.TürAraba; } }
+        }
+
+        public class Kamyon<Marka> : IKamyon
+            where Marka : IMarka, new()
+        {
+            private Marka marka;
+            public Kamyon()
+            {
+                marka = new Marka();
+            }
+            public string TürKamyon { get { return marka.TürKamyon; } }
+        }
+
+        public interface IMarka
+        {
+            string TürAraba { get; }
+            string TürKamyon { get; }
+        }
+
+        public class BMW : IMarka
+        {
+            public string TürAraba{ get { return "BMW Heçbek Araba"; } }
+            public string TürKamyon { get { return "BMW Çekici Kamyon"; } }
+        }
+
+        public class Mercedes : IMarka
+        {
+            public string TürAraba { get { return "Mercedes SUV Araba"; } }
+            public string TürKamyon { get { return "Mercedes Damperli Kamyon"; } }
+        }
+
+        class Client<Marka>
+            where Marka : IMarka, new()
+        {
+            public void ClientMain()
+            {
+                IFabrika<Marka> fabrika = new Fabrika<Marka>();
+                IAraba araba = fabrika.arabaOluştur();
+                IKamyon kamyon = fabrika.kamyonOluştur();
+
+                Console.WriteLine(araba.TürAraba);
+                Console.WriteLine(kamyon.TürKamyon);
+            }
+        }
+
+
+        static void Main(string[] args)
+        {
+            new Client<BMW>().ClientMain();
+            new Client<Mercedes>().ClientMain();
+        }
+    }
+}
