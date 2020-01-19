@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Fabrika
+{
+    class Program
+    {
+        public interface IÜrün
+        {
+            string tedarikEdilenYer();
+        }
+
+        public class ÜrünA : IÜrün
+        {
+            public string tedarikEdilenYer()
+            {
+                return "Ürün Güney Afrika'dan gelmektedir.";
+            }
+        }
+
+        public class ÜrünB : IÜrün
+        {
+            public string tedarikEdilenYer()
+            {
+                return "Ürün İspanya'dan gelmektedir.";
+            }
+        }
+
+        public class Yaratıcı
+        {
+            public IÜrün FabrikaYöntemi(int ay)
+            {
+                if (ay >= 4 && ay <= 11)
+                    return new ÜrünA();
+                return new ÜrünB();
+            }
+        }
+
+
+        static void Main(string[] args)
+        {
+            Yaratıcı _y = new Yaratıcı();
+            IÜrün ürün;
+
+            for(int i=1; i<=12; i++)
+            {
+                ürün = _y.FabrikaYöntemi(i);
+                Console.WriteLine(ürün.tedarikEdilenYer());
+            }
+        }
+    }
+}
