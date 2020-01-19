@@ -1,0 +1,77 @@
+using System;
+
+namespace Prototip
+{
+    public class Kişi
+    {
+        public int yaş;
+        public DateTime doğumZamanı;
+        public string isim;
+        public idBilgisi idBilgisi;
+
+        public Kişi ShallowCopy()
+        {
+            return (Kişi)this.MemberwiseClone();
+        }
+
+        public Kişi DeepCopy()
+        {
+            Kişi klon = (Kişi)this.MemberwiseClone();
+            klon.idBilgisi = new idBilgisi(idBilgisi.IdNumarası);
+            klon.isim = String.Copy(isim);
+            return klon;
+        }
+    }
+
+    public class idBilgisi
+    {
+        public int IdNumarası;
+
+        public idBilgisi(int IdNumarası)
+        {
+            this.IdNumarası = IdNumarası;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Kişi p1 = new Kişi();
+            p1.yaş = 42;
+            p1.doğumZamanı = Convert.ToDateTime("1977-01-01");
+            p1.isim = "Kamil";
+            p1.idBilgisi = new idBilgisi(666);
+
+            Kişi p2 = p1.ShallowCopy();
+            Kişi p3 = p1.DeepCopy();
+
+            Console.WriteLine("p1, p2 ve p3 orjinal değerleri:");
+            Console.WriteLine("   p1 değerleri: ");
+            değerGöster(p1);
+            Console.WriteLine("   p2 değerleri:");
+            değerGöster(p2);
+            Console.WriteLine("   p3 değerleri:");
+            değerGöster(p3);
+
+            p1.yaş = 32;
+            p1.doğumZamanı = Convert.ToDateTime("1900-01-01");
+            p1.isim = "Cemil";
+            p1.idBilgisi.IdNumarası = 7878;
+            Console.WriteLine("\nDeğşiklikten sonra p1, p2 ve p3 değerleri");
+            Console.WriteLine("   p1 değerleri: ");
+            değerGöster(p1);
+            Console.WriteLine("   p2 değerleri:");
+            değerGöster(p2);
+            Console.WriteLine("   p3 değerleri:");
+            değerGöster(p3);
+        }
+
+        public static void değerGöster(Kişi p)
+        {
+            Console.WriteLine("      isim: {0:s}, yaş: {1:d}, doğumZamanı: {2:MM/dd/yy}",
+                p.isim, p.yaş, p.doğumZamanı);
+            Console.WriteLine("      ID#: {0:d}", p.idBilgisi.IdNumarası);
+        }
+    }
+}
